@@ -1,22 +1,37 @@
+---
+import "../styles/global.css"
+import Header from "../components/Header.astro"
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="es-ar">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>Experimentos Mate</title>
 	</head>
-	<body>
+	<body class="bg-gradient-to-r from-indigo-900 to-indigo-950">
+		<Header />
 		<slot />
+	<!--Scripts-->
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('opacity-0');
+            mobileMenu.classList.toggle('-translate-y-4');
+            mobileMenu.classList.toggle('scale-y-0');
+            
+            // Aseguramos la visibilidad durante la animación
+            if(mobileMenu.classList.contains('opacity-0')) {
+                mobileMenu.classList.remove('invisible');
+                setTimeout(() => mobileMenu.classList.add('invisible'), 300);
+            } else {
+                mobileMenu.classList.remove('invisible');
+            }
+        });
+    </script>
 	</body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

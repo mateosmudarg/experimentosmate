@@ -1,0 +1,201 @@
+<!-- Contenedor principal -->
+<section class="bg-indigo-800/20 backdrop-blur-lg border border-indigo-400/20 rounded-2xl shadow-2xl mx-4 sm:mx-24 my-12 p-8">
+    <!-- Selector de cifrado -->
+    <div class="mb-8">
+        <select id="tipoCifrado" class="w-full bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="cesar">Cifrado César</option>
+            <option value="inversion">Inversión de texto</option>
+            <option value="vigenere">Cifrado Vigenère</option>
+        </select>
+    </div>
+
+    <!-- Cifrado César -->
+    <div id="cesarSection" class="space-y-6">
+        <div class="space-y-4">
+            <textarea 
+                id="inputTexto" 
+                class="w-full h-32 px-4 py-2.5 bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                placeholder="Ingresa el texto aquí..."
+            ></textarea>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-indigo-200 mb-2 block">Desplazamiento (1-25):</label>
+                    <input 
+                        type="number" 
+                        id="desplazamiento" 
+                        class="w-full px-4 py-2.5 bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                        value="3"
+                        min="1"
+                        max="25"
+                    >
+                </div>
+                <div>
+                    <label class="text-indigo-200 mb-2 block">Acción:</label>
+                    <div class="flex gap-2">
+                        <button onclick="cifrarCesar()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
+                            Cifrar
+                        </button>
+                        <button onclick="descifrarCesar()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
+                            Descifrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inversión de texto -->
+    <div id="inversionSection" class="hidden space-y-6">
+        <div class="flex gap-2">
+            <button onclick="invertirTexto()" class="w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
+                Invertir Texto
+            </button>
+        </div>
+    </div>
+
+    <!-- Cifrado Vigenère -->
+    <div id="vigenereSection" class="hidden space-y-6">
+        <div class="space-y-4">
+            <div>
+                <label class="text-indigo-200 mb-2 block">Clave:</label>
+                <input 
+                    type="text" 
+                    id="claveVigenere" 
+                    class="w-full px-4 py-2.5 bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
+                    placeholder="Ingresa la clave"
+                >
+            </div>
+            <div class="flex gap-2">
+                <button onclick="cifrarVigenere()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
+                    Cifrar
+                </button>
+                <button onclick="descifrarVigenere()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
+                    Descifrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultado -->
+    <div class="mt-8 p-4 bg-indigo-900/30 rounded-lg border border-indigo-400/20">
+        <p class="text-indigo-200 mb-2">Resultado:</p>
+        <div id="resultado" class="text-indigo-100 whitespace-pre-wrap break-words"></div>
+    </div>
+</section>
+
+<script>
+    // Manejar cambio de cifrado
+    document.getElementById('tipoCifrado').addEventListener('change', (e) => {
+        document.querySelectorAll('[id$="Section"]').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`${e.target.value}Section`).classList.remove('hidden');
+    });
+
+    // Cifrado César
+    function cifradoCesar(texto, desplazamiento, cifrar = true) {
+        desplazamiento = parseInt(desplazamiento) % 26;
+        return texto.split('').map(c => {
+            const code = c.charCodeAt(0);
+            if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+                const base = code <= 90 ? 65 : 97;
+                const offset = cifrar ? desplazamiento : (26 - desplazamiento);
+                return String.fromCharCode((code - base + offset) % 26 + base);
+            }
+            return c;
+        }).join('');
+    }
+
+    function cifrarCesar() {
+        try {
+            const texto = document.getElementById('inputTexto').value;
+            const desplazamiento = document.getElementById('desplazamiento').value;
+            if (desplazamiento < 1 || desplazamiento > 25) {
+                throw new Error("El desplazamiento debe estar entre 1 y 25");
+            }
+            const resultado = cifradoCesar(texto, desplazamiento, true);
+            mostrarResultado(resultado);
+        } catch (error) {
+            mostrarError(error.message);
+        }
+    }
+
+    function descifrarCesar() {
+        try {
+            const texto = document.getElementById('inputTexto').value;
+            const desplazamiento = document.getElementById('desplazamiento').value;
+            if (desplazamiento < 1 || desplazamiento > 25) {
+                throw new Error("El desplazamiento debe estar entre 1 y 25");
+            }
+            const resultado = cifradoCesar(texto, desplazamiento, false);
+            mostrarResultado(resultado);
+        } catch (error) {
+            mostrarError(error.message);
+        }
+    }
+
+    // Inversión de texto
+    function invertirTexto() {
+        try {
+            const texto = document.getElementById('inputTexto').value;
+            const resultado = texto.split('').reverse().join('');
+            mostrarResultado(resultado);
+        } catch (error) {
+            mostrarError("Error al invertir el texto");
+        }
+    }
+
+    // Cifrado Vigenère
+    function procesarVigenere(texto, clave, cifrar = true) {
+        clave = clave.toUpperCase().replace(/[^A-Z]/g, '');
+        if (!clave) throw new Error("Clave inválida");
+        
+        let keyIndex = 0;
+        return texto.split('').map(c => {
+            const code = c.charCodeAt(0);
+            if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
+                const base = code <= 90 ? 65 : 97;
+                const keyChar = clave[keyIndex % clave.length].charCodeAt(0) - 65;
+                const offset = cifrar ? keyChar : (26 - keyChar);
+                keyIndex++;
+                return String.fromCharCode((code - base + offset) % 26 + base);
+            }
+            return c;
+        }).join('');
+    }
+
+    function cifrarVigenere() {
+        try {
+            const texto = document.getElementById('inputTexto').value;
+            const clave = document.getElementById('claveVigenere').value;
+            const resultado = procesarVigenere(texto, clave, true);
+            mostrarResultado(resultado);
+        } catch (error) {
+            mostrarError(error.message);
+        }
+    }
+
+    function descifrarVigenere() {
+        try {
+            const texto = document.getElementById('inputTexto').value;
+            const clave = document.getElementById('claveVigenere').value;
+            const resultado = procesarVigenere(texto, clave, false);
+            mostrarResultado(resultado);
+        } catch (error) {
+            mostrarError(error.message);
+        }
+    }
+
+    // Utilidades
+    function mostrarResultado(texto) {
+        document.getElementById('resultado').textContent = texto;
+        document.getElementById('inputTexto').classList.remove('border-red-400');
+    }
+
+    function mostrarError(mensaje) {
+        document.getElementById('resultado').textContent = mensaje;
+        document.getElementById('inputTexto').classList.add('border-red-400');
+        setTimeout(() => {
+            document.getElementById('inputTexto').classList.remove('border-red-400');
+        }, 2000);
+    }
+</script>
