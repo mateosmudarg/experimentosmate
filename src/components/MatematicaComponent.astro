@@ -1,201 +1,155 @@
-<!-- Contenedor principal -->
-<section class="bg-indigo-800/20 backdrop-blur-lg border border-indigo-400/20 rounded-2xl shadow-2xl mx-4 sm:mx-24 my-12 p-8">
-    <!-- Selector de cifrado -->
-    <div class="mb-8">
-        <select id="tipoCifrado" class="w-full bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <option value="cesar">Cifrado César</option>
-            <option value="inversion">Inversión de texto</option>
-            <option value="vigenere">Cifrado Vigenère</option>
-        </select>
-    </div>
+<section class="bg-indigo-800/20 backdrop-blur-lg border border-indigo-400/20 rounded-2xl shadow-2xl overflow-hidden transition-all hover:bg-indigo-800/30 mb-8 mx-4 sm:mx-24 my-32">
+    <div class="p-6 sm:p-8">
+        <header class="mb-6 pb-4 border-b border-indigo-400/20">
+            <h1 class="text-3xl font-bold text-indigo-50">
+                🧮 Proyectos Matemáticos
+            </h1>
+        </header>
 
-    <!-- Cifrado César -->
-    <div id="cesarSection" class="space-y-6">
-        <div class="space-y-4">
-            <textarea 
-                id="inputTexto" 
-                class="w-full h-32 px-4 py-2.5 bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-                placeholder="Ingresa el texto aquí..."
-            ></textarea>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="text-indigo-200 mb-2 block">Desplazamiento (1-25):</label>
+        <article class="space-y-6">
+            <div>
+                <h2 class="text-xl font-semibold text-indigo-100 mb-3">Conjetura de Collatz (3n + 1)</h2>
+                <p class="text-indigo-200 leading-relaxed">
+                    Este famoso problema matemático propone que para cualquier número entero positivo:
+                    <ul class="list-disc list-inside text-indigo-300 space-y-2 mt-3 pl-4">
+                        <li>Si es par, divídelo entre 2</li>
+                        <li>Si es impar, multiplícalo por 3 y suma 1</li>
+                    </ul>
+                    <br>
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row gap-4">
                     <input 
                         type="number" 
-                        id="desplazamiento" 
-                        class="w-full px-4 py-2.5 bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-                        value="3"
+                        id="collatznum" 
+                        placeholder="Ingresa un número positivo"
+                        class="flex-1 px-4 py-2.5 bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                         min="1"
-                        max="25"
                     >
+                    <button 
+                        id="collatzBtn"
+                        class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 font-medium rounded-lg transition-colors"
+                    >
+                        Calcular
+                    </button>
                 </div>
-                <div>
-                    <label class="text-indigo-200 mb-2 block">Acción:</label>
-                    <div class="flex gap-2">
-                        <button onclick="cifrarCesar()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
-                            Cifrar
+
+                <div id="resultado" class="mt-6 p-4 bg-indigo-900/30 rounded-lg border border-indigo-400/20 space-y-4">
+                    <p class="text-indigo-100 text-center">
+                        Se requirieron 
+                        <span id="pasos" class="text-indigo-300 font-bold mx-1">0</span> 
+                        pasos para llegar a 1
+                    </p>
+
+                    <!-- Botones de descarga -->
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                        <button 
+                            id="descargarTxt" 
+                            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors text-sm"
+                        >
+                            Descargar TXT
                         </button>
-                        <button onclick="descifrarCesar()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
-                            Descifrar
+                        <button 
+                            id="descargarExcel" 
+                            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors text-sm"
+                        >
+                            Descargar Excel
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Inversión de texto -->
-    <div id="inversionSection" class="hidden space-y-6">
-        <div class="flex gap-2">
-            <button onclick="invertirTexto()" class="w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
-                Invertir Texto
-            </button>
-        </div>
-    </div>
-
-    <!-- Cifrado Vigenère -->
-    <div id="vigenereSection" class="hidden space-y-6">
-        <div class="space-y-4">
-            <div>
-                <label class="text-indigo-200 mb-2 block">Clave:</label>
-                <input 
-                    type="text" 
-                    id="claveVigenere" 
-                    class="w-full px-4 py-2.5 bg-indigo-900/30 border border-indigo-400/20 rounded-lg text-indigo-100 placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" 
-                    placeholder="Ingresa la clave"
-                >
-            </div>
-            <div class="flex gap-2">
-                <button onclick="cifrarVigenere()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
-                    Cifrar
-                </button>
-                <button onclick="descifrarVigenere()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded-lg transition-colors">
-                    Descifrar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Resultado -->
-    <div class="mt-8 p-4 bg-indigo-900/30 rounded-lg border border-indigo-400/20">
-        <p class="text-indigo-200 mb-2">Resultado:</p>
-        <div id="resultado" class="text-indigo-100 whitespace-pre-wrap break-words"></div>
+        </article>
     </div>
 </section>
 
+<!-- Incluir la librería SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 <script>
-    // Manejar cambio de cifrado
-    document.getElementById('tipoCifrado').addEventListener('change', (e) => {
-        document.querySelectorAll('[id$="Section"]').forEach(el => el.classList.add('hidden'));
-        document.getElementById(`${e.target.value}Section`).classList.remove('hidden');
+    let secuenciaCompleta = [];
+
+    document.getElementById('collatzBtn').addEventListener('click', () => {
+        const input = document.getElementById('collatznum');
+        const pasosSpan = document.getElementById('pasos');
+        const resultadoDiv = document.getElementById('resultado');
+        
+        // Validación básica
+        let numero = parseInt(input.value);
+        if (isNaN(numero) || numero < 1) {
+            input.classList.add('ring-2', 'ring-red-400');
+            setTimeout(() => input.classList.remove('ring-2', 'ring-red-400'), 1000);
+            return;
+        }
+
+        // Algoritmo Collatz
+        secuenciaCompleta = [];
+        let n = numero;
+        let pasos = 0;
+        
+        while (n !== 1) {
+            const operacion = n % 2 === 0 ? `${n} / 2 = ${n/2}` : `3×${n} + 1 = ${(n*3)+1}`;
+            secuenciaCompleta.push({
+                paso: pasos + 1,
+                numero: n,
+                operacion: operacion
+            });
+            
+            n = n % 2 === 0 ? n / 2 : (n * 3) + 1;
+            pasos++;
+        }
+
+        // Mostrar resultado
+        pasosSpan.textContent = pasos;
+        resultadoDiv.classList.remove('hidden');
     });
 
-    // Cifrado César
-    function cifradoCesar(texto, desplazamiento, cifrar = true) {
-        desplazamiento = parseInt(desplazamiento) % 26;
-        return texto.split('').map(c => {
-            const code = c.charCodeAt(0);
-            if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
-                const base = code <= 90 ? 65 : 97;
-                const offset = cifrar ? desplazamiento : (26 - desplazamiento);
-                return String.fromCharCode((code - base + offset) % 26 + base);
-            }
-            return c;
-        }).join('');
-    }
+    // Descargar TXT
+    document.getElementById('descargarTxt').addEventListener('click', () => {
+        if (secuenciaCompleta.length === 0) return;
 
-    function cifrarCesar() {
-        try {
-            const texto = document.getElementById('inputTexto').value;
-            const desplazamiento = document.getElementById('desplazamiento').value;
-            if (desplazamiento < 1 || desplazamiento > 25) {
-                throw new Error("El desplazamiento debe estar entre 1 y 25");
-            }
-            const resultado = cifradoCesar(texto, desplazamiento, true);
-            mostrarResultado(resultado);
-        } catch (error) {
-            mostrarError(error.message);
-        }
-    }
-
-    function descifrarCesar() {
-        try {
-            const texto = document.getElementById('inputTexto').value;
-            const desplazamiento = document.getElementById('desplazamiento').value;
-            if (desplazamiento < 1 || desplazamiento > 25) {
-                throw new Error("El desplazamiento debe estar entre 1 y 25");
-            }
-            const resultado = cifradoCesar(texto, desplazamiento, false);
-            mostrarResultado(resultado);
-        } catch (error) {
-            mostrarError(error.message);
-        }
-    }
-
-    // Inversión de texto
-    function invertirTexto() {
-        try {
-            const texto = document.getElementById('inputTexto').value;
-            const resultado = texto.split('').reverse().join('');
-            mostrarResultado(resultado);
-        } catch (error) {
-            mostrarError("Error al invertir el texto");
-        }
-    }
-
-    // Cifrado Vigenère
-    function procesarVigenere(texto, clave, cifrar = true) {
-        clave = clave.toUpperCase().replace(/[^A-Z]/g, '');
-        if (!clave) throw new Error("Clave inválida");
+        let contenidoTxt = `Secuencia de Collatz para: ${document.getElementById('collatznum').value}\n\n`;
+        contenidoTxt += "| Paso  | Número  | Operación      |\n";
+        contenidoTxt += "|-------|---------|----------------|\n";
         
-        let keyIndex = 0;
-        return texto.split('').map(c => {
-            const code = c.charCodeAt(0);
-            if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) {
-                const base = code <= 90 ? 65 : 97;
-                const keyChar = clave[keyIndex % clave.length].charCodeAt(0) - 65;
-                const offset = cifrar ? keyChar : (26 - keyChar);
-                keyIndex++;
-                return String.fromCharCode((code - base + offset) % 26 + base);
-            }
-            return c;
-        }).join('');
-    }
+        secuenciaCompleta.forEach(paso => {
+            contenidoTxt += `| ${paso.paso.toString().padEnd(5)} | ${paso.numero.toString().padEnd(7)} | ${paso.operacion.padEnd(14)} |\n`;
+        });
+        
+        const blob = new Blob([contenidoTxt], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `collatz_${document.getElementById('collatznum').value}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
 
-    function cifrarVigenere() {
-        try {
-            const texto = document.getElementById('inputTexto').value;
-            const clave = document.getElementById('claveVigenere').value;
-            const resultado = procesarVigenere(texto, clave, true);
-            mostrarResultado(resultado);
-        } catch (error) {
-            mostrarError(error.message);
-        }
-    }
+    // Descargar Excel (XLSX)
+    document.getElementById('descargarExcel').addEventListener('click', () => {
+        if (secuenciaCompleta.length === 0) return;
 
-    function descifrarVigenere() {
-        try {
-            const texto = document.getElementById('inputTexto').value;
-            const clave = document.getElementById('claveVigenere').value;
-            const resultado = procesarVigenere(texto, clave, false);
-            mostrarResultado(resultado);
-        } catch (error) {
-            mostrarError(error.message);
-        }
-    }
+        // Crear hoja de cálculo
+        const datos = [
+            ["Paso", "Número", "Operación"],
+            ...secuenciaCompleta.map(paso => [paso.paso, paso.numero, paso.operacion])
+        ];
 
-    // Utilidades
-    function mostrarResultado(texto) {
-        document.getElementById('resultado').textContent = texto;
-        document.getElementById('inputTexto').classList.remove('border-red-400');
-    }
+        const hoja = XLSX.utils.aoa_to_sheet(datos);
 
-    function mostrarError(mensaje) {
-        document.getElementById('resultado').textContent = mensaje;
-        document.getElementById('inputTexto').classList.add('border-red-400');
-        setTimeout(() => {
-            document.getElementById('inputTexto').classList.remove('border-red-400');
-        }, 2000);
-    }
+        // Ajustar el ancho de las columnas
+        hoja['!cols'] = [
+            { width: 10 }, // Paso
+            { width: 10 }, // Número
+            { width: 20 }  // Operación
+        ];
+
+        // Crear libro de trabajo
+        const libro = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(libro, hoja, "Secuencia Collatz");
+
+        // Descargar archivo
+        XLSX.writeFile(libro, `collatz_${document.getElementById('collatznum').value}.xlsx`);
+    });
 </script>
